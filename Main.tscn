@@ -1,0 +1,28 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://Drag.cs" type="Script" id=1]
+[ext_resource path="res://Client.gd" type="Script" id=2]
+
+[node name="Main" type="Node2D"]
+
+[node name="Client" type="Node" parent="."]
+script = ExtResource( 2 )
+
+[node name="Card" type="Panel" parent="."]
+margin_left = 240.0
+margin_top = 91.0
+margin_right = 417.0
+margin_bottom = 346.0
+script = ExtResource( 1 )
+
+[node name="Card2" type="Panel" parent="."]
+margin_left = 649.0
+margin_top = 118.0
+margin_right = 826.0
+margin_bottom = 373.0
+script = ExtResource( 1 )
+
+[connection signal="mouse_entered" from="Card" to="Card" method="OnMouseEntered"]
+[connection signal="mouse_exited" from="Card" to="Card" method="OnMouseExited"]
+[connection signal="mouse_entered" from="Card2" to="Card2" method="OnMouseEntered"]
+[connection signal="mouse_exited" from="Card2" to="Card2" method="OnMouseExited"]
