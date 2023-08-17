@@ -10,6 +10,7 @@ export class Game extends Room {
     onCreate(options) {
 
         console.log("Game Room created!", options);
+        console.log("Room ID: " + this.roomId);
 
         //set a custom state from a created schema
         this.setState(new GameState());
@@ -25,6 +26,11 @@ export class Game extends Room {
         this.onMessage("game-message", (client, message) => {
             this.broadcast("game-message", message, { except: client });
         });
+
+        //when a message is received of type "client-request", respond to the sending client with the appropriate data
+        this.onMessage("client-request", (client, message) => {
+            client.send("client-request", {kind: "draw"});
+        })
 
     }
 

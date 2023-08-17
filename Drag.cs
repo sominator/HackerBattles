@@ -21,8 +21,6 @@ public class Drag : Panel
 				Vector2 _mousePosition = new Vector2(GetViewport().GetMousePosition());
 				RectPosition = new Vector2(_mousePosition.x - 40, _mousePosition.y - 40);
 				GetParent().MoveChild(this, GetParent().GetChildCount());
-
-				GD.Print(GetParent().GetChildCount());
 			}
 			if (Input.IsActionJustReleased("left_click"))
 			{ 
