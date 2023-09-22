@@ -36,4 +36,6 @@ script = ExtResource( 1 )
 CardScene = ExtResource( 4 )
 
 [connection signal="draw_cards" from="Client" to="GameManager" method="DrawCards"]
+[connection signal="render_cards" from="Client" to="GameManager" method="RenderCards"]
 [connection signal="button_down" from="Button" to="Client" method="_on_button_down"]
+[connection signal="CardsDrawn" from="GameManager" to="Client" method="_on_cards_drawn"]
