@@ -2,4 +2,8 @@
   <PropertyGroup>
     <TargetFramework>net472</TargetFramework>
   </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="server - Copy\**" />
+    <EmbeddedResource Remove="server - Copy\**" />
+  </ItemGroup>
 </Project>

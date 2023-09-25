@@ -55,4 +55,7 @@ func _on_button_down():
 	room.send("client-request", "draw")
 
 func _on_cards_drawn():
-	room.send("game-message", "cards_drawn") # Replace with function body.
+	room.send("game-message", "cards_drawn")
+
+func _on_card_dropped():
+	room.send("game-message", "card_dropped")

@@ -5,10 +5,14 @@ public class Drag : Panel
 {
 	private bool _mouseIn = false;
 	private bool _isDragging = false;
+	private bool _isOverDropZone = false;
+	private Vector2 _startPosition;
+	private GameManager _gm;
+
 	public override void _Ready()
 	{
-		
-		
+		_startPosition = RectPosition;
+		_gm = GetParent<GameManager>();
 	}
 
 	public override void _Process(float delta)
@@ -25,6 +29,15 @@ public class Drag : Panel
 			if (Input.IsActionJustReleased("left_click"))
 			{ 
 				_isDragging = false;
+				if (_isOverDropZone)
+				{
+					RectPosition = new Vector2((_gm.CardsInDropZone * 50) + 25, 425);
+					_gm.Drop();
+				}
+				else
+				{
+					RectPosition = _startPosition;
+				}
 			}
 		}
 		base._Process(delta);
@@ -39,5 +52,15 @@ public class Drag : Panel
 	private void OnMouseExited()
 	{
 		_mouseIn = false;
+	}
+	
+	private void OnArea2DEntered(object area)
+	{
+		_isOverDropZone = true;
+	}
+	
+	private void OnArea2DExited(object area)
+	{
+		_isOverDropZone = false;
 	}
 }
