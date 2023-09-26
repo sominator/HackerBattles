@@ -3,6 +3,7 @@ extends Node
 const colyseus = preload("res://addons/godot_colyseus/lib/colyseus.gd")
 var room: colyseus.Room
 
+#set up basic schema
 class GameState extends colyseus.Schema:
 	static func define_fields():
 		var mySynchronizedProperty = "Hello world"
@@ -11,6 +12,7 @@ class GameState extends colyseus.Schema:
 		]
 
 func _ready():
+	#set up client
 	var client = colyseus.Client.new("ws://localhost:2567")
 	var promise = client.join_or_create(GameState, "game")
 	yield(promise, "completed")
@@ -54,8 +56,10 @@ func _on_client_request(data):
 func _on_button_down():
 	room.send("client-request", "draw")
 
+#send message to server that cards have been drawn
 func _on_cards_drawn():
 	room.send("game-message", "cards_drawn")
 
+#send message to server that card has been dropped
 func _on_card_dropped():
 	room.send("game-message", "card_dropped")

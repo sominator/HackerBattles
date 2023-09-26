@@ -4,14 +4,17 @@ using System.Collections.Generic;
 
 public class GameManager : Node
 {
+	//expose card and card back in editor
 	[Export]
 	public PackedScene CardScene;
 
 	[Export]
 	public PackedScene CardBackScene;
 
+	//keep track of number of cards in dropzone
 	public int CardsInDropZone { get; set; }
 
+	//keep track of number of opponent card backs to render
 	private List<Panel> opponentCards = new List<Panel>();
 
 	public override void _Ready()
@@ -19,7 +22,9 @@ public class GameManager : Node
 		CardsInDropZone = 0;
 		base._Ready();
 	}
-	private void DrawCards()
+
+    //draw cards and emit signal to client object that cards have been drawn
+    private void DrawCards()
 	{
 		for (int i = 0; i < 5; i++)
 		{
@@ -30,6 +35,7 @@ public class GameManager : Node
 		EmitSignal(nameof(CardsDrawn));
 	}
 
+	//render opponent cards upon receiving signal from client object
 	private void RenderCards()
 	{
 		for (int i = 0; i < 5; i++)
@@ -41,6 +47,7 @@ public class GameManager : Node
 		}
 	}
 
+	//handle drop signal from client object
 	private void RenderDrop()
 	{
 		if (opponentCards.Count > 0)
@@ -54,15 +61,18 @@ public class GameManager : Node
 		CardsInDropZone++;
 	}
 
+	//handle card being dropped
 	public void Drop()
 	{
 		CardsInDropZone++;
 		EmitSignal(nameof(CardDropped));
 	}
 
+	//signal to let client object know cards have been drawn
 	[Signal]
 	public delegate void CardsDrawn();
 
+	//signal to let client object know card has been dropped
 	[Signal]
 	public delegate void CardDropped();
 }
