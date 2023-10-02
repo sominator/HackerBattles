@@ -22,7 +22,6 @@ func _ready():
 	var room: colyseus.Room = promise.get_result()
 	room.on_message("server-message").on(funcref(self, "_on_server_message"))
 	room.on_message("game-message").on(funcref(self, "_on_game_message"))
-	room.on_message("client-request").on(funcref(self, "_on_client_request"))
 	self.room = room
 
 #signal to request GameManager to instance player cards
@@ -46,16 +45,6 @@ func _on_game_message(data):
 	elif (data == "card_dropped"):
 		emit_signal("dropped_card")
 				
-#log client request to console and draw cards
-func _on_client_request(data):
-	print (data)
-	if (data.kind == "draw"):
-		emit_signal("draw_cards")
-
-#send request to server to draw cards on button down
-func _on_button_down():
-	room.send("client-request", "draw")
-
 #send message to server that cards have been drawn
 func _on_cards_drawn():
 	room.send("game-message", "cards_drawn")

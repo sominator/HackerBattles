@@ -1,9 +1,10 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://GameManager.cs" type="Script" id=1]
 [ext_resource path="res://Client.gd" type="Script" id=2]
 [ext_resource path="res://CardBack.tscn" type="PackedScene" id=3]
-[ext_resource path="res://Card.tscn" type="PackedScene" id=4]
+[ext_resource path="res://Ping.tscn" type="PackedScene" id=4]
+[ext_resource path="res://Boolean.tscn" type="PackedScene" id=5]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 640, 140 )
@@ -44,12 +45,13 @@ text = "Draw Cards"
 
 [node name="GameManager" type="Node" parent="."]
 script = ExtResource( 1 )
-CardScene = ExtResource( 4 )
+PingScene = ExtResource( 4 )
+BooleanScene = ExtResource( 5 )
 CardBackScene = ExtResource( 3 )
 
 [connection signal="draw_cards" from="Client" to="GameManager" method="DrawCards"]
-[connection signal="dropped_card" from="Client" to="GameManager" method="RenderDrop"]
-[connection signal="render_cards" from="Client" to="GameManager" method="RenderCards"]
-[connection signal="button_down" from="Button" to="Client" method="_on_button_down"]
+[connection signal="dropped_card" from="Client" to="GameManager" method="RenderOpponentCardDrop"]
+[connection signal="render_cards" from="Client" to="GameManager" method="RenderOpponentCardBacks"]
+[connection signal="button_down" from="Button" to="GameManager" method="OnDrawCardsButtonDown"]
 [connection signal="CardDropped" from="GameManager" to="Client" method="_on_card_dropped"]
 [connection signal="CardsDrawn" from="GameManager" to="Client" method="_on_cards_drawn"]

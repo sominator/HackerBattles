@@ -27,11 +27,6 @@ export class Game extends Room {
             this.broadcast("game-message", message, { except: client });
         });
 
-        //when a message is received of type "client-request", respond to the sending client with the appropriate data
-        this.onMessage("client-request", (client, message) => {
-            client.send("client-request", {kind: "draw"});
-        })
-
     }
 
     //determine what should happen when a client joins

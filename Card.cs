@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-public class Drag : Panel
+public class Card : Panel
 {
 	//create private variables to store initial data
 	private bool _mouseIn = false;
