@@ -31,12 +31,15 @@ public class GameManager : Node
 		//seed randomizer
 		GD.Randomize();
 		GD.Print(_cards);
-		
+
+		base._Ready();
+	}
+
+	public void DealCards()
+	{
 		//shuffle card array
 		_cards.Shuffle();
 		GD.Print(_cards);
-
-		base._Ready();
 	}
 
 	//draw cards and emit signal to client object that cards have been drawn

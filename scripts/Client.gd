@@ -24,6 +24,9 @@ func _ready():
 	room.on_message("game-message").on(funcref(self, "_on_game_message"))
 	self.room = room
 
+#signal to request GameManager to shuffle and deal cards
+signal deal_cards
+
 #signal to request GameManager to instance player cards
 signal draw_cards
 
@@ -35,11 +38,13 @@ signal dropped_card
 
 #log server message to console
 func _on_server_message(data):
-	print(data)
+	print("Server Message received: " + data)
 	
 #log game message to console
 func _on_game_message(data):
-	print(data)
+	print("Game Message received: " + data)
+	if (data == "deal_cards"):
+		emit_signal("deal_cards")
 	if (data == "cards_drawn"):
 		emit_signal("render_cards")
 	elif (data == "card_dropped"):

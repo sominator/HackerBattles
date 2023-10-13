@@ -9,6 +9,9 @@ export class Game extends Room {
     //determine what should happen when a room is created
     onCreate(options) {
 
+        //track number of players
+        this.numberOfPlayers = 0;
+
         console.log("Game Room created!", options);
         console.log("Room ID: " + this.roomId);
 
@@ -31,12 +34,17 @@ export class Game extends Room {
 
     //determine what should happen when a client joins
     onJoin(client, options) {
+        this.numberOfPlayers++;
         console.log(client.sessionId, "joined!");
         this.broadcast("server-message", `${client.sessionId} joined.`);
+        if (this.numberOfPlayers === 2) {
+            this.broadcast("game-message", "deal_cards");
+        }
     }
 
     //determine what should happen when a client leaves
     onLeave(client, consented) {
+        this.numberOfPlayers--;
         console.log(client.sessionId, "left!");
         this.broadcast("server-message", `${client.sessionId} left.`);
     }

@@ -12,7 +12,6 @@ config_version=4
 
 config/name="HackerBattles"
 run/main_scene="res://Main.tscn"
-config/icon="res://icon.png"
 
 [debug]
 
