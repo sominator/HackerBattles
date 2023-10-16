@@ -3,6 +3,9 @@ using System;
 
 public class Card : Panel
 {
+	//ID to track card instance
+	public int ID { get; set; }
+
 	//create private variables to store initial data
 	private bool _mouseIn = false;
 	private bool _isDragging = false;

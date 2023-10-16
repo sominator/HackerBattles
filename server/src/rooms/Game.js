@@ -1,5 +1,6 @@
 import { Room } from "@colyseus/core";
 import { GameState } from "./schema/GameState.js";
+import shuffle from "shuffle-array";
 
 export class Game extends Room {
 
@@ -30,6 +31,10 @@ export class Game extends Room {
             this.broadcast("game-message", message, { except: client });
         });
 
+        this.shuffleDeck = () => {
+            return shuffle(["boolean", "defrag", "double", "echo", "firewall", "float", "glitch", "handshake", "host", "ping", "probe", "reInitialize", "splice", "turnkey"]);
+        }
+
     }
 
     //determine what should happen when a client joins
@@ -38,7 +43,8 @@ export class Game extends Room {
         console.log(client.sessionId, "joined!");
         this.broadcast("server-message", `${client.sessionId} joined.`);
         if (this.numberOfPlayers === 2) {
-            this.broadcast("game-message", "deal_cards");
+            this.clients[0].send("game-message", { action: "deal_cards", data: this.shuffleDeck() });
+            this.clients[1].send("game-message", { action: "deal_cards", data: this.shuffleDeck() });
         }
     }
 

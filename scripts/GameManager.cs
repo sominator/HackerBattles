@@ -5,41 +5,105 @@ using System.Collections.Generic;
 
 public class GameManager : Node
 {
-	//expose cards and card back in editor
+    #region CardScenes
+    //expose cards and card back in editor
+    [Export]
+	public PackedScene BooleanScene;
+	[Export]
+	public PackedScene DefragScene;
+	[Export]
+	public PackedScene DoubleScene;
+	[Export]
+	public PackedScene EchoScene;
+	[Export]
+	public PackedScene FirewallScene;
+	[Export]
+	public PackedScene FloatScene;
+	[Export]
+	public PackedScene GlitchScene;
+	[Export]
+	public PackedScene HandshakeScene;
+	[Export]
+	public PackedScene HostScene;
 	[Export]
 	public PackedScene PingScene;
-
 	[Export]
-	public PackedScene BooleanScene;
-
+	public PackedScene ProbeScene;
+	[Export]
+	public PackedScene ReInitializeScene;
+	[Export]
+	public PackedScene ScrapeScene;
+	[Export]
+	public PackedScene SpliceScene;
+	[Export]
+	public PackedScene TurnKeyScene;
 	[Export]
 	public PackedScene CardBackScene;
+    #endregion
 
-	//keep track of number of cards in dropzone
-	public int CardsInDropZone { get; set; }
+    //keep track of number of cards in dropzone
+    public int CardsInDropZone { get; set; }
 
 	//keep track of number of opponent card backs to render
 	private List<Panel> opponentCards = new List<Panel>();
 
-	//store array of cards to shuffle
-	private Array<string> _cards = new Array<string> { "boolean", "defrag", "double", "echo", "firewall", "float", "glitch", "handshake", "host", "ping", "probe", "reInitialize", "scrape", "splice", "turnkey" };
-
+	
 	public override void _Ready()
 	{
 		CardsInDropZone = 0;
 
-		//seed randomizer
-		GD.Randomize();
-		GD.Print(_cards);
-
 		base._Ready();
 	}
 
-	public void DealCards()
+	//deal cards based on shuffle array received from client
+	public void DealCards(string[] data)
 	{
-		//shuffle card array
-		_cards.Shuffle();
-		GD.Print(_cards);
+		for (int i = 0; i < data.Length; i++)
+		{
+			Panel card = GetScene(data[i]).Instance<Panel>();
+			card.RectPosition = new Vector2((i * 75) + 25, 825);
+			AddChild(card);
+		}
+	}
+
+	//determine PackedScene to instance based on string name
+	private PackedScene GetScene(string cardName)
+	{
+		switch (cardName)
+		{
+			case "boolean":
+				return BooleanScene;
+			case "defrag":
+				return DefragScene;
+			case "double":
+				return DoubleScene;
+			case "echo":
+				return EchoScene;
+			case "firewall":
+				return FirewallScene;
+			case "float":
+				return FloatScene;
+			case "glitch":
+				return GlitchScene;
+			case "handshake":
+				return HandshakeScene;
+			case "host":
+				return HostScene;
+			case "ping":
+				return PingScene;
+			case "probe":
+				return ProbeScene;
+			case "reInitialize":
+				return ReInitializeScene;
+			case "scrape":
+				return ScrapeScene;
+			case "splice":
+				return SpliceScene;
+			case "turnkey":
+				return TurnKeyScene;
+			default: return null;
+		}
+			
 	}
 
 	//draw cards and emit signal to client object that cards have been drawn

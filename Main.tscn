@@ -1,10 +1,23 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=20 format=2]
 
 [ext_resource path="res://scripts/GameManager.cs" type="Script" id=1]
 [ext_resource path="res://scripts/Client.gd" type="Script" id=2]
 [ext_resource path="res://cards/playable/Boolean.tscn" type="PackedScene" id=3]
 [ext_resource path="res://cards/playable/Ping.tscn" type="PackedScene" id=4]
 [ext_resource path="res://cards/playable/CardBack.tscn" type="PackedScene" id=5]
+[ext_resource path="res://cards/playable/Double.tscn" type="PackedScene" id=6]
+[ext_resource path="res://cards/playable/Defrag.tscn" type="PackedScene" id=7]
+[ext_resource path="res://cards/playable/Echo.tscn" type="PackedScene" id=8]
+[ext_resource path="res://cards/playable/Float.tscn" type="PackedScene" id=9]
+[ext_resource path="res://cards/playable/Handshake.tscn" type="PackedScene" id=10]
+[ext_resource path="res://cards/playable/Firewall.tscn" type="PackedScene" id=11]
+[ext_resource path="res://cards/playable/Glitch.tscn" type="PackedScene" id=12]
+[ext_resource path="res://cards/playable/Splice.tscn" type="PackedScene" id=13]
+[ext_resource path="res://cards/playable/Turnkey.tscn" type="PackedScene" id=14]
+[ext_resource path="res://cards/playable/Host.tscn" type="PackedScene" id=15]
+[ext_resource path="res://cards/playable/Scrape.tscn" type="PackedScene" id=16]
+[ext_resource path="res://cards/playable/Probe.tscn" type="PackedScene" id=17]
+[ext_resource path="res://cards/playable/ReInitialize.tscn" type="PackedScene" id=18]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 640, 140 )
@@ -45,8 +58,21 @@ text = "Draw Cards"
 
 [node name="GameManager" type="Node" parent="."]
 script = ExtResource( 1 )
-PingScene = ExtResource( 4 )
 BooleanScene = ExtResource( 3 )
+DefragScene = ExtResource( 7 )
+DoubleScene = ExtResource( 6 )
+EchoScene = ExtResource( 8 )
+FirewallScene = ExtResource( 11 )
+FloatScene = ExtResource( 9 )
+GlitchScene = ExtResource( 12 )
+HandshakeScene = ExtResource( 10 )
+HostScene = ExtResource( 15 )
+PingScene = ExtResource( 4 )
+ProbeScene = ExtResource( 17 )
+ReInitializeScene = ExtResource( 18 )
+ScrapeScene = ExtResource( 16 )
+SpliceScene = ExtResource( 13 )
+TurnKeyScene = ExtResource( 14 )
 CardBackScene = ExtResource( 5 )
 
 [connection signal="deal_cards" from="Client" to="GameManager" method="DealCards"]
