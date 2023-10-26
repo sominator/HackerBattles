@@ -10,9 +10,6 @@ export class Game extends Room {
     //determine what should happen when a room is created
     onCreate(options) {
 
-        //track number of players
-        this.numberOfPlayers = 0;
-
         console.log("Game Room created!", options);
         console.log("Room ID: " + this.roomId);
 
@@ -31,20 +28,45 @@ export class Game extends Room {
             this.broadcast("game-message", message, { except: client });
         });
 
+        //track number of players
+        this.numberOfPlayers = 0;
+
+        //shuffle array of card names
         this.shuffleDeck = () => {
-            return shuffle(["boolean", "defrag", "double", "echo", "firewall", "float", "glitch", "handshake", "host", "ping", "probe", "reInitialize", "splice", "turnkey"]);
+            return shuffle(["boolean", "defrag", "double", "echo", "firewall", "float", "glitch", "handshake", "host", "ping", "probe", "reInitialize", "scrape", "splice", "turnkey"]);
         }
+
+        //create two decks
+        this.deckA = this.shuffleDeck();
+        this.deckB = this.shuffleDeck();
 
     }
 
     //determine what should happen when a client joins
     onJoin(client, options) {
+
+        //increment number of players
         this.numberOfPlayers++;
+
         console.log(client.sessionId, "joined!");
         this.broadcast("server-message", `${client.sessionId} joined.`);
+
+        //if two players are present, message clients with deck arrays
         if (this.numberOfPlayers === 2) {
-            this.clients[0].send("game-message", { action: "deal_cards", data: this.shuffleDeck() });
-            this.clients[1].send("game-message", { action: "deal_cards", data: this.shuffleDeck() });
+            this.clients[0].send("game-message", {
+                action: "shuffle_decks",
+                data: {
+                    playerDeck: this.deckA,
+                    opponentDeck: this.deckB,
+                }
+            });
+            this.clients[1].send("game-message", {
+                action: "shuffle_decks",
+                data: {
+                    playerDeck: this.deckB,
+                    opponentDeck: this.deckA,
+                }
+            });
         }
     }
 

@@ -5,9 +5,9 @@ using System.Collections.Generic;
 
 public class GameManager : Node
 {
-    #region CardScenes
-    //expose cards and card back in editor
-    [Export]
+	#region CardScenes
+	//expose cards and card back in editor
+	[Export]
 	public PackedScene BooleanScene;
 	[Export]
 	public PackedScene DefragScene;
@@ -39,14 +39,22 @@ public class GameManager : Node
 	public PackedScene TurnKeyScene;
 	[Export]
 	public PackedScene CardBackScene;
-    #endregion
+	#endregion
 
-    //keep track of number of cards in dropzone
-    public int CardsInDropZone { get; set; }
+	//keep track of number of cards in dropzone
+	public int CardsInDropZone { get; set; }
 
-	//keep track of number of opponent card backs to render
-	private List<Panel> opponentCards = new List<Panel>();
+	//keep track of player cards in deck
+	public List<Card> PlayerCardsInDeck = new List<Card>();
 
+	//keep track of opponent cards in deck
+	public List<Card> OpponentCardsInDeck = new List<Card>();
+
+	//keep track of cards in play
+	private List<Card> PlayerCardsInPlay = new List<Card>();
+
+	//store center of viewscreen as origin point
+	private Vector2 _origin = new Vector2(960, 440);
 	
 	public override void _Ready()
 	{
@@ -55,15 +63,62 @@ public class GameManager : Node
 		base._Ready();
 	}
 
-	//deal cards based on shuffle array received from client
-	public void DealCards(string[] data)
+	//render player deck, giving each card an ID and cardType and adding it to PlayerCardsInDeck
+	private void RenderPlayerDeck(string[] playerDeck)
 	{
-		for (int i = 0; i < data.Length; i++)
+		for (int i = 0; i < playerDeck.Length; i++)
 		{
-			Panel card = GetScene(data[i]).Instance<Panel>();
-			card.RectPosition = new Vector2((i * 75) + 25, 825);
+			Card card = GetScene(playerDeck[i]).Instance<Card>();
+			card.RectPosition = new Vector2(_origin.x + 340, _origin.y + 385);
+			card.ID = i;
+			card.CardType = "PlayerCard";
+			card.IsDraggable = true;
+			PlayerCardsInDeck.Add(card);
 			AddChild(card);
 		}
+	}
+
+	//render opponent deck, giving each card an ID and cardType
+	private void RenderOpponentDeck(string[] opponentDeck)
+	{
+		for (int i = 0; i < opponentDeck.Length; i++)
+		{
+			Card card = GetScene(opponentDeck[i]).Instance<Card>();
+			card.RectPosition = new Vector2(_origin.x + 340, _origin.y - 415);
+			card.ID = i;
+			card.CardType = "OpponentCard";
+			card.IsDraggable = false;
+			OpponentCardsInDeck.Add(card);
+			AddChild(card);
+		}
+	}
+
+	//deal five cards from player deck, adding each card to PlayerCardsInPlay and removing it from PlayerCardsInDeck
+	private void DealPlayerCards()
+	{
+		for (int i = 0; i < 5; i++)
+		{
+			if (PlayerCardsInDeck[i] == null) return;
+
+			Card card = PlayerCardsInDeck[i];
+			card.RectPosition = new Vector2((i * 75) + 25, 825);
+			PlayerCardsInPlay.Add(card);
+			EmitSignal(nameof(PlayerCardMoved), card.ID, card.RectPosition);
+		}
+		PlayerCardsInDeck.RemoveRange(0, 5);
+	}
+
+	//handle card being dropped
+	public void MoveCard()
+	{
+		EmitSignal(nameof(PlayerCardMoved));
+	}
+
+	//handle drop signal from client object
+	private void RenderOpponentMovedCard(int ID, int posX, int posY)
+	{
+		Card card = OpponentCardsInDeck.Find(x => x.ID == ID);
+		card.RectPosition = new Vector2(posX + 50, posY + 50);
 	}
 
 	//determine PackedScene to instance based on string name
@@ -103,59 +158,10 @@ public class GameManager : Node
 				return TurnKeyScene;
 			default: return null;
 		}
-			
-	}
 
-	//draw cards and emit signal to client object that cards have been drawn
-	private void OnDrawCardsButtonDown()
-	{
-		for (int i = 0; i < 5; i++)
-		{
-			Panel card = PingScene.Instance<Panel>();
-			card.RectPosition = new Vector2((i * 150) + 25, 825);
-			AddChild(card);
-		}
-		EmitSignal(nameof(CardsDrawn));
 	}
-
-	//render opponent cards upon receiving signal from client object
-	private void RenderOpponentCardBacks()
-	{
-		for (int i = 0; i < 5; i++)
-		{
-			Panel card = CardBackScene.Instance<Panel>();
-			card.RectPosition = new Vector2((i * 150) + 25, 25);
-			AddChild(card);
-			opponentCards.Add(card);
-		}
-	}
-
-	//handle drop signal from client object
-	private void RenderOpponentCardDrop()
-	{
-		if (opponentCards.Count > 0)
-		{
-			opponentCards[0].QueueFree();
-			opponentCards.RemoveAt(0);
-		}
-		Panel card = PingScene.Instance<Panel>();
-		card.RectPosition = new Vector2((CardsInDropZone * 50) + 25, 425);
-		AddChild(card);
-		CardsInDropZone++;
-	}
-
-	//handle card being dropped
-	public void Drop()
-	{
-		CardsInDropZone++;
-		EmitSignal(nameof(CardDropped));
-	}
-
-	//signal to let client object know cards have been drawn
-	[Signal]
-	public delegate void CardsDrawn();
 
 	//signal to let client object know card has been dropped
 	[Signal]
-	public delegate void CardDropped();
+	public delegate void PlayerCardMoved(int ID, Vector2 position);
 }

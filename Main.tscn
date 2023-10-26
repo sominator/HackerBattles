@@ -49,12 +49,28 @@ margin_right = 1280.0
 margin_bottom = 1080.0
 
 [node name="Button" type="Button" parent="."]
-margin_left = 1424.0
-margin_top = 475.0
-margin_right = 1564.0
-margin_bottom = 525.0
+margin_left = 1344.0
+margin_top = 400.0
+margin_right = 1444.0
+margin_bottom = 432.0
 rect_scale = Vector2( 2, 2 )
-text = "Draw Cards"
+text = "Deal 5 Cards"
+
+[node name="Button2" type="Button" parent="."]
+margin_left = 1344.0
+margin_top = 509.0
+margin_right = 1444.0
+margin_bottom = 541.0
+rect_scale = Vector2( 2, 2 )
+text = "Clean Up Cards"
+
+[node name="Button3" type="Button" parent="."]
+margin_left = 1344.0
+margin_top = 616.0
+margin_right = 1444.0
+margin_bottom = 648.0
+rect_scale = Vector2( 2, 2 )
+text = "Shuffle Decks"
 
 [node name="GameManager" type="Node" parent="."]
 script = ExtResource( 1 )
@@ -75,10 +91,13 @@ SpliceScene = ExtResource( 13 )
 TurnKeyScene = ExtResource( 14 )
 CardBackScene = ExtResource( 5 )
 
-[connection signal="deal_cards" from="Client" to="GameManager" method="DealCards"]
-[connection signal="draw_cards" from="Client" to="GameManager" method="DrawCards"]
-[connection signal="dropped_card" from="Client" to="GameManager" method="RenderOpponentCardDrop"]
-[connection signal="render_cards" from="Client" to="GameManager" method="RenderOpponentCardBacks"]
-[connection signal="button_down" from="Button" to="GameManager" method="OnDrawCardsButtonDown"]
-[connection signal="CardDropped" from="GameManager" to="Client" method="_on_card_dropped"]
-[connection signal="CardsDrawn" from="GameManager" to="Client" method="_on_cards_drawn"]
+[node name="Area2D" type="Area2D" parent="GameManager"]
+position = Vector2( 960, 540 )
+
+[connection signal="render_opponent_deck" from="Client" to="GameManager" method="RenderOpponentDeck"]
+[connection signal="render_opponent_moved_card" from="Client" to="GameManager" method="RenderOpponentMovedCard"]
+[connection signal="render_player_deck" from="Client" to="GameManager" method="RenderPlayerDeck"]
+[connection signal="button_down" from="Button" to="GameManager" method="DealPlayerCards"]
+[connection signal="button_down" from="Button2" to="GameManager" method="OnDrawCardsButtonDown"]
+[connection signal="button_down" from="Button3" to="GameManager" method="OnDrawCardsButtonDown"]
+[connection signal="PlayerCardMoved" from="GameManager" to="Client" method="_on_player_card_moved"]

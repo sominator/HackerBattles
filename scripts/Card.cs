@@ -6,6 +6,12 @@ public class Card : Panel
 	//ID to track card instance
 	public int ID { get; set; }
 
+	//string to track card type ("PlayerCard" or "OpponentCard")
+	public string CardType { get; set; }
+
+	//bool to check whether card is draggable
+	public bool IsDraggable { get; set; }
+
 	//create private variables to store initial data
 	private bool _mouseIn = false;
 	private bool _isDragging = false;
@@ -24,6 +30,8 @@ public class Card : Panel
 	{
 		if (_mouseIn)
 		{
+			if (!IsDraggable) return;
+
 			//handle dragging and render card over other game objects
 			if (Input.IsActionPressed("left_click"))
 			{
@@ -39,7 +47,7 @@ public class Card : Panel
 				if (_isOverDropZone)
 				{
 					RectPosition = new Vector2((_gm.CardsInDropZone * 50) + 25, 425);
-					_gm.Drop();
+					_gm.MoveCard();
 				}
 				else
 				{
