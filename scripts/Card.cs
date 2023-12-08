@@ -73,6 +73,8 @@ public class Card : Panel
 	private void OnArea2DEntered(object area)
 	{
 		_isOverDropZone = true;
+		Area2D socket = area as Area2D;
+		GD.Print(socket.GetParent().Name);
 	}
 	//handle exit collision with dropzone signal
 	private void OnArea2DExited(object area)

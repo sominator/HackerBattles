@@ -52,9 +52,6 @@ public class GameManager : Node
 
 	//keep track of cards in play
 	private List<Card> PlayerCardsInPlay = new List<Card>();
-
-	//store center of viewscreen as origin point
-	private Vector2 _origin = new Vector2(960, 440);
 	
 	public override void _Ready()
 	{
@@ -69,7 +66,7 @@ public class GameManager : Node
 		for (int i = 0; i < playerDeck.Length; i++)
 		{
 			Card card = GetScene(playerDeck[i]).Instance<Card>();
-			card.RectPosition = new Vector2(_origin.x + 340, _origin.y + 385);
+			card.RectPosition = new Vector2(1300, 825);
 			card.ID = i;
 			card.CardType = "PlayerCard";
 			card.IsDraggable = true;
@@ -84,7 +81,7 @@ public class GameManager : Node
 		for (int i = 0; i < opponentDeck.Length; i++)
 		{
 			Card card = GetScene(opponentDeck[i]).Instance<Card>();
-			card.RectPosition = new Vector2(_origin.x + 340, _origin.y - 415);
+			card.RectPosition = new Vector2(1300, 25);
 			card.ID = i;
 			card.CardType = "OpponentCard";
 			card.IsDraggable = false;
@@ -103,7 +100,7 @@ public class GameManager : Node
 			Card card = PlayerCardsInDeck[i];
 			card.RectPosition = new Vector2((i * 75) + 25, 825);
 			PlayerCardsInPlay.Add(card);
-			EmitSignal(nameof(PlayerCardMoved), card.ID, card.RectPosition);
+			EmitSignal(nameof(PlayerCardMoved), card.ID, new Vector2((i * 75) + 25, 0));
 		}
 		PlayerCardsInDeck.RemoveRange(0, 5);
 	}
@@ -118,7 +115,7 @@ public class GameManager : Node
 	private void RenderOpponentMovedCard(int ID, int posX, int posY)
 	{
 		Card card = OpponentCardsInDeck.Find(x => x.ID == ID);
-		card.RectPosition = new Vector2(posX + 50, posY + 50);
+		card.RectPosition = new Vector2(posX, posY);
 	}
 
 	//determine PackedScene to instance based on string name
