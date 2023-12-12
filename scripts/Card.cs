@@ -1,6 +1,5 @@
 using Godot;
 using System;
-
 public class Card : Panel
 {
 	//ID to track card instance
@@ -9,21 +8,23 @@ public class Card : Panel
 	//string to track card type ("PlayerCard" or "OpponentCard")
 	public string CardType { get; set; }
 
+	//vector to track card start position
+	public Vector2 StartPosition { get; set; }
+
 	//bool to check whether card is draggable
 	public bool IsDraggable { get; set; }
 
 	//create private variables to store initial data
 	private bool _mouseIn = false;
 	private bool _isDragging = false;
-	private bool _isOverDropZone = false;
-	private Vector2 _startPosition;
+	private Panel _overSocket = null;
 	private GameManager _gm;
 
 	public override void _Ready()
 	{
-		//store start position and locate GameManager
-		_startPosition = RectPosition;
+		//locate GameManager and set start position
 		_gm = GetParent<GameManager>();
+		StartPosition = RectPosition;
 	}
 
 	public override void _Process(float delta)
@@ -31,7 +32,7 @@ public class Card : Panel
 		if (_mouseIn)
 		{
 			if (!IsDraggable) return;
-
+			
 			//handle dragging and render card over other game objects
 			if (Input.IsActionPressed("left_click"))
 			{
@@ -44,14 +45,14 @@ public class Card : Panel
 			if (Input.IsActionJustReleased("left_click"))
 			{ 
 				_isDragging = false;
-				if (_isOverDropZone)
+				if (_overSocket != null)
 				{
-					RectPosition = new Vector2((_gm.CardsInDropZone * 50) + 25, 425);
-					_gm.MoveCard();
+					RectPosition = _overSocket.RectPosition;
+					//_gm.MoveCard();
 				}
 				else
 				{
-					RectPosition = _startPosition;
+					RectPosition = StartPosition;
 				}
 			}
 		}
@@ -72,13 +73,14 @@ public class Card : Panel
 	//handle enter collision with dropzone signal
 	private void OnArea2DEntered(object area)
 	{
-		_isOverDropZone = true;
 		Area2D socket = area as Area2D;
+		_overSocket = (Panel)socket.GetParent();
 		GD.Print(socket.GetParent().Name);
 	}
 	//handle exit collision with dropzone signal
 	private void OnArea2DExited(object area)
 	{
-		_isOverDropZone = false;
+		GD.Print("End colliding");
+		_overSocket = null;
 	}
 }

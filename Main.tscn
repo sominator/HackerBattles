@@ -20,7 +20,7 @@
 [ext_resource path="res://cards/playable/ReInitialize.tscn" type="PackedScene" id=18]
 
 [sub_resource type="RectangleShape2D" id=1]
-extents = Vector2( 88, 127.5 )
+extents = Vector2( 32, 127.5 )
 
 [node name="Main" type="Node2D"]
 
@@ -43,7 +43,7 @@ margin_bottom = 810.0
 collision_mask = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerSockets/PlayerSocket1/Area2D"]
-position = Vector2( 88, 127.5 )
+position = Vector2( 96, 127.5 )
 shape = SubResource( 1 )
 
 [node name="PlayerSocket2" type="Panel" parent="PlayerSockets"]

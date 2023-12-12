@@ -41,9 +41,6 @@ public class GameManager : Node
 	public PackedScene CardBackScene;
 	#endregion
 
-	//keep track of number of cards in dropzone
-	public int CardsInDropZone { get; set; }
-
 	//keep track of player cards in deck
 	public List<Card> PlayerCardsInDeck = new List<Card>();
 
@@ -52,10 +49,27 @@ public class GameManager : Node
 
 	//keep track of cards in play
 	private List<Card> PlayerCardsInPlay = new List<Card>();
+
+	//keep track of player sockets
+	public List<Panel> PlayerSockets = new List<Panel>();
+
+	//keep track of opponent sockets
+	public List<Panel> OpponentSockets = new List<Panel>();
 	
 	public override void _Ready()
 	{
-		CardsInDropZone = 0;
+		//store player and opponent sockets
+		Node _playerSockets = GetNode("../PlayerSockets");
+		for (int i = 0; i < _playerSockets.GetChildCount(); i++)
+		{
+			PlayerSockets.Add((Panel)_playerSockets.GetChild(i));
+		}
+
+		Node _opponentSockets = GetNode("../OpponentSockets");
+		for (int i = 0; i < _opponentSockets.GetChildCount(); i++)
+		{
+			PlayerSockets.Add((Panel)_opponentSockets.GetChild(i));
+		}
 
 		base._Ready();
 	}
@@ -99,6 +113,7 @@ public class GameManager : Node
 
 			Card card = PlayerCardsInDeck[i];
 			card.RectPosition = new Vector2((i * 75) + 25, 825);
+			card.StartPosition = card.RectPosition;
 			PlayerCardsInPlay.Add(card);
 			EmitSignal(nameof(PlayerCardMoved), card.ID, new Vector2((i * 75) + 25, 0));
 		}
