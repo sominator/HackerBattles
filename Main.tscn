@@ -20,7 +20,7 @@
 [ext_resource path="res://cards/playable/ReInitialize.tscn" type="PackedScene" id=18]
 
 [sub_resource type="RectangleShape2D" id=1]
-extents = Vector2( 32, 127.5 )
+extents = Vector2( 25, 75 )
 
 [node name="Main" type="Node2D"]
 

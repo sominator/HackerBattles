@@ -48,7 +48,7 @@ public class Card : Panel
 				if (_overSocket != null)
 				{
 					RectPosition = _overSocket.RectPosition;
-					//_gm.MoveCard();
+					_gm.DroppedCard(ID, _overSocket.Name);
 				}
 				else
 				{

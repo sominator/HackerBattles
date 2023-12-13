@@ -68,7 +68,7 @@ public class GameManager : Node
 		Node _opponentSockets = GetNode("../OpponentSockets");
 		for (int i = 0; i < _opponentSockets.GetChildCount(); i++)
 		{
-			PlayerSockets.Add((Panel)_opponentSockets.GetChild(i));
+			OpponentSockets.Add((Panel)_opponentSockets.GetChild(i));
 		}
 
 		base._Ready();
@@ -120,10 +120,48 @@ public class GameManager : Node
 		PlayerCardsInDeck.RemoveRange(0, 5);
 	}
 
-	//handle card being dropped
-	public void MoveCard()
+	//handle card being dropped in socket and send a message to render it in the opposing socket
+	public void DroppedCard(int ID, string socketName)
 	{
-		EmitSignal(nameof(PlayerCardMoved));
+		Panel _socket;
+
+		switch (socketName)
+		{
+			case "PlayerSocket1":
+				_socket = OpponentSockets[0];
+				break;
+			case "PlayerSocket2":
+				_socket = OpponentSockets[1];
+				break;
+			case "PlayerSocket3":
+				_socket = OpponentSockets[2];
+				break;
+			case "PlayerSocket4":
+				_socket = OpponentSockets[3];
+				break;
+			case "PlayerSocket5":
+				_socket = OpponentSockets[4];
+				break;
+			case "OpponentSocket1":
+				_socket = PlayerSockets[0];
+				break;
+			case "OpponentSocket2":
+				_socket = PlayerSockets[1];
+				break;
+			case "OpponentSocket3":
+				_socket = PlayerSockets[2];
+				break;
+			case "OpponentSocket4":
+				_socket = PlayerSockets[3];
+				break;
+			case "OpponentSocket5":
+				_socket = PlayerSockets[4];
+				break;
+			default:
+				_socket = null;
+				break;
+		}
+		EmitSignal(nameof(PlayerCardMoved), ID, _socket.RectPosition);
 	}
 
 	//handle drop signal from client object

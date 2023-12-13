@@ -3,7 +3,7 @@
 [ext_resource path="res://scripts/Card.cs" type="Script" id=1]
 
 [sub_resource type="RectangleShape2D" id=1]
-extents = Vector2( 88.5, 128 )
+extents = Vector2( 75, 25 )
 
 [node name="Card" type="Panel"]
 margin_right = 177.0
