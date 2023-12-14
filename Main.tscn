@@ -170,7 +170,7 @@ margin_top = 820.0
 margin_right = 1280.0
 margin_bottom = 1080.0
 
-[node name="Button" type="Button" parent="."]
+[node name="ButtonDealCards" type="Button" parent="."]
 margin_left = 1344.0
 margin_top = 400.0
 margin_right = 1444.0
@@ -178,7 +178,7 @@ margin_bottom = 432.0
 rect_scale = Vector2( 2, 2 )
 text = "Deal 5 Cards"
 
-[node name="Button2" type="Button" parent="."]
+[node name="ButtonCleanUpCards" type="Button" parent="."]
 margin_left = 1344.0
 margin_top = 509.0
 margin_right = 1444.0
@@ -186,13 +186,77 @@ margin_bottom = 541.0
 rect_scale = Vector2( 2, 2 )
 text = "Clean Up Cards"
 
-[node name="Button3" type="Button" parent="."]
+[node name="ButtonShuffleDeck" type="Button" parent="."]
 margin_left = 1344.0
 margin_top = 616.0
 margin_right = 1444.0
 margin_bottom = 648.0
 rect_scale = Vector2( 2, 2 )
 text = "Shuffle Deck"
+
+[node name="SpinBoxOpponentBP" type="SpinBox" parent="."]
+margin_left = 1450.0
+margin_top = 288.0
+margin_right = 1500.0
+margin_bottom = 305.0
+rect_scale = Vector2( 2, 2 )
+max_value = 20.0
+
+[node name="SpinBoxOpponentVariables" type="SpinBox" parent="."]
+margin_left = 1450.0
+margin_top = 336.0
+margin_right = 1500.0
+margin_bottom = 353.0
+rect_scale = Vector2( 2, 2 )
+max_value = 20.0
+
+[node name="LabelOpponentBP" type="Label" parent="."]
+margin_left = 1405.0
+margin_top = 296.0
+margin_right = 1425.0
+margin_bottom = 305.0
+rect_scale = Vector2( 2, 2 )
+text = "BP:"
+
+[node name="LabelOpponentVariables" type="Label" parent="."]
+margin_left = 1328.0
+margin_top = 344.0
+margin_right = 1385.0
+margin_bottom = 353.0
+rect_scale = Vector2( 2, 2 )
+text = "Variables:"
+
+[node name="SpinBoxOpponentBP2" type="SpinBox" parent="."]
+margin_left = 1450.0
+margin_top = 704.0
+margin_right = 1500.0
+margin_bottom = 721.0
+rect_scale = Vector2( 2, 2 )
+max_value = 20.0
+
+[node name="SpinBoxOpponentVariables2" type="SpinBox" parent="."]
+margin_left = 1450.0
+margin_top = 752.0
+margin_right = 1500.0
+margin_bottom = 769.0
+rect_scale = Vector2( 2, 2 )
+max_value = 20.0
+
+[node name="LabelOpponentBP2" type="Label" parent="."]
+margin_left = 1405.0
+margin_top = 712.0
+margin_right = 1425.0
+margin_bottom = 721.0
+rect_scale = Vector2( 2, 2 )
+text = "BP:"
+
+[node name="LabelOpponentVariables2" type="Label" parent="."]
+margin_left = 1328.0
+margin_top = 760.0
+margin_right = 1385.0
+margin_bottom = 769.0
+rect_scale = Vector2( 2, 2 )
+text = "Variables:"
 
 [node name="GameManager" type="Node" parent="."]
 script = ExtResource( 1 )
@@ -219,8 +283,8 @@ position = Vector2( 960, 540 )
 [connection signal="render_opponent_deck" from="Client" to="GameManager" method="RenderOpponentDeck"]
 [connection signal="render_opponent_moved_card" from="Client" to="GameManager" method="RenderOpponentMovedCard"]
 [connection signal="render_player_deck" from="Client" to="GameManager" method="RenderPlayerDeck"]
-[connection signal="button_down" from="Button" to="GameManager" method="DealPlayerCards"]
-[connection signal="button_down" from="Button2" to="GameManager" method="CleanUpPlayerCards"]
-[connection signal="button_down" from="Button3" to="GameManager" method="ShufflePlayerDeck"]
+[connection signal="button_down" from="ButtonDealCards" to="GameManager" method="DealPlayerCards"]
+[connection signal="button_down" from="ButtonCleanUpCards" to="GameManager" method="CleanUpPlayerCards"]
+[connection signal="button_down" from="ButtonShuffleDeck" to="GameManager" method="ShufflePlayerDeck"]
 [connection signal="PlayerCardMoved" from="GameManager" to="Client" method="_on_player_card_moved"]
 [connection signal="PlayerCardsShuffled" from="GameManager" to="Client" method="_on_player_deck_shuffled"]
