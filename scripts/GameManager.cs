@@ -59,13 +59,13 @@ public class GameManager : Node
 	public override void _Ready()
 	{
 		//store player and opponent sockets
-		Node _playerSockets = GetNode("../PlayerSockets");
+		Node _playerSockets = GetNode("../UI/PlayerSockets");
 		for (int i = 0; i < _playerSockets.GetChildCount(); i++)
 		{
 			PlayerSockets.Add((Panel)_playerSockets.GetChild(i));
 		}
 
-		Node _opponentSockets = GetNode("../OpponentSockets");
+		Node _opponentSockets = GetNode("../UI/OpponentSockets");
 		for (int i = 0; i < _opponentSockets.GetChildCount(); i++)
 		{
 			OpponentSockets.Add((Panel)_opponentSockets.GetChild(i));

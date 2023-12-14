@@ -46,7 +46,6 @@ func _on_game_message(message):
 		emit_signal("render_opponent_deck", message.data.opponentDeck)
 	elif (message.action == "card_moved"):
 		emit_signal("render_opponent_moved_card", message.data.id, message.data.posX, message.data.posY)
-		print(message.data)
 	elif (message.action == "player_deck_shuffled"):
 		emit_signal("render_player_deck", message.data.playerDeck)
 	elif (message.action == "opponent_deck_shuffled"):
