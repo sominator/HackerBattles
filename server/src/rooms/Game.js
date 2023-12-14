@@ -26,6 +26,29 @@ export class Game extends Room {
         //when a message is received of type "game-message," broadcast it with the type "game-message" to all clients except for the one that sent it
         this.onMessage("game-message", (client, message) => {
             this.broadcast("game-message", message, { except: client });
+
+            //handle request for a new shuffled player deck and render it on the opponent side
+            if (message.action == "deck_shuffled") {
+                let deck;
+                if (client == this.clients[0]) {
+                    deck = this.deckA;
+                } else if (client == this.clients[1]) {
+                    deck = this.deckB;
+                }
+                deck = this.shuffleDeck();
+                this.broadcast("game-message", {
+                    action: "opponent_deck_shuffled",
+                    data: {
+                        opponentDeck: deck
+                    },
+                }, { except: client });
+                client.send("game-message", {
+                    action: "player_deck_shuffled",
+                    data: {
+                        playerDeck: deck
+                    },
+                })
+            }
         });
 
         //track number of players
@@ -33,7 +56,7 @@ export class Game extends Room {
 
         //shuffle array of card names
         this.shuffleDeck = () => {
-            return shuffle(["boolean", "defrag", "double", "echo", "firewall", "float", "glitch", "handshake", "host", "ping", "probe", "reInitialize", "scrape", "splice", "turnkey"]);
+            return shuffle(["boolean", "defrag", "double", "echo", "firewall", "float", "glitch", "handshake", "host", "ping", "probe", "reInitialize", "scrape", "splice", "turnkey", "boolean", "defrag", "double", "echo", "firewall", "float", "glitch", "handshake", "host", "ping", "probe", "reInitialize", "scrape", "splice", "turnkey"]);
         }
 
         //create two decks

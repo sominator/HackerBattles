@@ -192,7 +192,7 @@ margin_top = 616.0
 margin_right = 1444.0
 margin_bottom = 648.0
 rect_scale = Vector2( 2, 2 )
-text = "Shuffle Decks"
+text = "Shuffle Deck"
 
 [node name="GameManager" type="Node" parent="."]
 script = ExtResource( 1 )
@@ -220,6 +220,7 @@ position = Vector2( 960, 540 )
 [connection signal="render_opponent_moved_card" from="Client" to="GameManager" method="RenderOpponentMovedCard"]
 [connection signal="render_player_deck" from="Client" to="GameManager" method="RenderPlayerDeck"]
 [connection signal="button_down" from="Button" to="GameManager" method="DealPlayerCards"]
-[connection signal="button_down" from="Button2" to="GameManager" method="OnDrawCardsButtonDown"]
-[connection signal="button_down" from="Button3" to="GameManager" method="OnDrawCardsButtonDown"]
+[connection signal="button_down" from="Button2" to="GameManager" method="CleanUpPlayerCards"]
+[connection signal="button_down" from="Button3" to="GameManager" method="ShufflePlayerDeck"]
 [connection signal="PlayerCardMoved" from="GameManager" to="Client" method="_on_player_card_moved"]
+[connection signal="PlayerCardsShuffled" from="GameManager" to="Client" method="_on_player_deck_shuffled"]

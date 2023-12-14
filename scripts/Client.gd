@@ -47,8 +47,17 @@ func _on_game_message(message):
 	elif (message.action == "card_moved"):
 		emit_signal("render_opponent_moved_card", message.data.id, message.data.posX, message.data.posY)
 		print(message.data)
+	elif (message.action == "player_deck_shuffled"):
+		emit_signal("render_player_deck", message.data.playerDeck)
+	elif (message.action == "opponent_deck_shuffled"):
+		emit_signal("render_opponent_deck", message.data.opponentDeck)
 
 #send message to server that player card has been moved, splitting the "position" into posX and posY coordinates because Colyseus seems to have an issue messaging a Vector2
 func _on_player_card_moved(ID, position):
 	var message = {"action": "card_moved", "data": {"id": ID, "posX": position.x, "posY": position.y}}
+	room.send("game-message", message)
+
+#send message to server to request a new shuffled player deck and render it on the opponent side
+func _on_player_deck_shuffled():
+	var message = {"action": "deck_shuffled"}
 	room.send("game-message", message)

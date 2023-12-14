@@ -74,10 +74,20 @@ public class GameManager : Node
 		base._Ready();
 	}
 
-	//render player deck, giving each card an ID and cardType and adding it to PlayerCardsInDeck
+	//render player deck, removing any existing cards and giving each card an ID and cardType and adding it to PlayerCardsInDeck
 	private void RenderPlayerDeck(string[] playerDeck)
 	{
-		for (int i = 0; i < playerDeck.Length; i++)
+        for (int i = PlayerCardsInDeck.Count; i > 0; i--)
+        {
+            PlayerCardsInDeck[i - 1].QueueFree();
+            PlayerCardsInDeck.RemoveAt(i - 1);
+        }
+        for (int i = PlayerCardsInPlay.Count; i > 0; i--)
+        {
+            PlayerCardsInPlay[i - 1].QueueFree();
+            PlayerCardsInPlay.RemoveAt(i - 1);
+        }
+        for (int i = 0; i < playerDeck.Length; i++)
 		{
 			Card card = GetScene(playerDeck[i]).Instance<Card>();
 			card.RectPosition = new Vector2(1300, 825);
@@ -89,10 +99,15 @@ public class GameManager : Node
 		}
 	}
 
-	//render opponent deck, giving each card an ID and cardType
+	//render opponent deck, removing any existing cards and giving each card an ID and cardType
 	private void RenderOpponentDeck(string[] opponentDeck)
 	{
-		for (int i = 0; i < opponentDeck.Length; i++)
+        for (int i = OpponentCardsInDeck.Count; i > 0; i--)
+        {
+            OpponentCardsInDeck[i - 1].QueueFree();
+            OpponentCardsInDeck.RemoveAt(i - 1);
+        }
+        for (int i = 0; i < opponentDeck.Length; i++)
 		{
 			Card card = GetScene(opponentDeck[i]).Instance<Card>();
 			card.RectPosition = new Vector2(1300, 25);
@@ -107,21 +122,40 @@ public class GameManager : Node
 	//deal five cards from player deck, adding each card to PlayerCardsInPlay and removing it from PlayerCardsInDeck
 	private void DealPlayerCards()
 	{
+		if (PlayerCardsInDeck.Count < 5) return;
 		for (int i = 0; i < 5; i++)
 		{
-			if (PlayerCardsInDeck[i] == null) return;
-
 			Card card = PlayerCardsInDeck[i];
-			card.RectPosition = new Vector2((i * 75) + 25, 825);
+			card.RectPosition = new Vector2((i * 215) + 125, 825);
 			card.StartPosition = card.RectPosition;
 			PlayerCardsInPlay.Add(card);
-			EmitSignal(nameof(PlayerCardMoved), card.ID, new Vector2((i * 75) + 25, 0));
+			EmitSignal(nameof(PlayerCardMoved), card.ID, new Vector2((i * 215) + 125, 0));
 		}
 		PlayerCardsInDeck.RemoveRange(0, 5);
 	}
 
-	//handle card being dropped in socket and send a message to render it in the opposing socket
-	public void DroppedCard(int ID, string socketName)
+	//move all PlayerCardsInPlay to the discard pile
+	private void CleanUpPlayerCards()
+	{
+		if (PlayerCardsInPlay.Count == 0) return;
+		for (int i = 0; i < PlayerCardsInPlay.Count; i++)
+		{
+			Card card = PlayerCardsInPlay[i];
+			card.RectPosition = new Vector2(1650, 825);
+			card.StartPosition = card.RectPosition;
+			EmitSignal(nameof(PlayerCardMoved), card.ID, new Vector2(1650, 25));
+		}
+		GD.Print(PlayerCardsInPlay.Count);
+	}
+	
+	//request a new shuffled deck from server
+    private void ShufflePlayerDeck()
+    {
+		EmitSignal(nameof(PlayerCardsShuffled));
+    }
+
+    //handle card being dropped in socket and send a message to render it in the opposing socket
+    public void DroppedCard(int ID, string socketName)
 	{
 		Panel _socket;
 
@@ -214,4 +248,8 @@ public class GameManager : Node
 	//signal to let client object know card has been dropped
 	[Signal]
 	public delegate void PlayerCardMoved(int ID, Vector2 position);
+
+	//signal to let client object know to request a new shuffled deck
+	[Signal]
+	public delegate void PlayerCardsShuffled();
 }
