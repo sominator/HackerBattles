@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=2]
+[gd_scene load_steps=21 format=2]
 
 [ext_resource path="res://scripts/GameManager.cs" type="Script" id=1]
 [ext_resource path="res://scripts/Client.gd" type="Script" id=2]
@@ -18,6 +18,7 @@
 [ext_resource path="res://cards/playable/Scrape.tscn" type="PackedScene" id=16]
 [ext_resource path="res://cards/playable/Probe.tscn" type="PackedScene" id=17]
 [ext_resource path="res://cards/playable/ReInitialize.tscn" type="PackedScene" id=18]
+[ext_resource path="res://scripts/UIManager.cs" type="Script" id=19]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 25, 75 )
@@ -290,17 +291,6 @@ margin_bottom = 518.0
 rect_scale = Vector2( 2, 2 )
 text = "Objective:"
 
-[node name="OptionObjective" type="OptionButton" parent="UI"]
-margin_left = 1585.0
-margin_top = 544.0
-margin_right = 1736.0
-margin_bottom = 557.0
-rect_scale = Vector2( 2, 2 )
-text = "Reach 10 bit points (BP)"
-align = 1
-items = [ "Reach 10 bit points (BP)", null, false, 0, null, "Spend 20 variables", null, false, 1, null, "Execute {} five times", null, false, 2, null, "Exchange functions with an opponent four times", null, false, 3, null, "Play or cause 5 inactive functions", null, false, 4, null ]
-selected = 0
-
 [node name="LabelPlayerSpecialization" type="Label" parent="UI"]
 margin_left = 1657.0
 margin_top = 712.0
@@ -308,6 +298,18 @@ margin_right = 1741.0
 margin_bottom = 721.0
 rect_scale = Vector2( 2, 2 )
 text = "Specialization:"
+
+[node name="OptionObjective" type="OptionButton" parent="UI"]
+margin_left = 1585.0
+margin_top = 544.0
+margin_right = 1736.0
+margin_bottom = 557.0
+rect_scale = Vector2( 2, 2 )
+text = "Reach 10 bit points (BP)"
+clip_text = true
+align = 1
+items = [ "Reach 10 bit points (BP)", null, false, 0, null, "Spend 20 variables", null, false, 1, null, "Execute {} five times", null, false, 2, null, "Exchange functions with an opponent four times", null, false, 3, null, "Play or cause 5 inactive functions", null, false, 4, null ]
+selected = 0
 
 [node name="OptionPlayerSpecialization" type="OptionButton" parent="UI"]
 margin_left = 1585.0
@@ -319,6 +321,9 @@ text = "Ace"
 align = 1
 items = [ "Ace", null, false, 0, null, "Firestorm", null, false, 1, null, "Interrupt", null, false, 2, null, "Overload", null, false, 3, null, "Reset", null, false, 4, null ]
 selected = 0
+
+[node name="UIManager" type="Node" parent="."]
+script = ExtResource( 19 )
 
 [node name="GameManager" type="Node" parent="."]
 script = ExtResource( 1 )
@@ -342,8 +347,20 @@ CardBackScene = ExtResource( 5 )
 [connection signal="render_opponent_deck" from="Client" to="GameManager" method="RenderOpponentDeck"]
 [connection signal="render_opponent_moved_card" from="Client" to="GameManager" method="RenderOpponentMovedCard"]
 [connection signal="render_player_deck" from="Client" to="GameManager" method="RenderPlayerDeck"]
+[connection signal="update_objective" from="Client" to="UIManager" method="UpdateObjective"]
+[connection signal="update_opponent_bp" from="Client" to="UIManager" method="UpdateOpponentBP"]
+[connection signal="update_opponent_specialization" from="Client" to="UIManager" method="UpdateOpponentSpecialization"]
+[connection signal="update_opponent_variables" from="Client" to="UIManager" method="UpdateOpponentVariables"]
 [connection signal="button_down" from="UI/ButtonDealCards" to="GameManager" method="DealPlayerCards"]
 [connection signal="button_down" from="UI/ButtonCleanUpCards" to="GameManager" method="CleanUpPlayerCards"]
 [connection signal="button_down" from="UI/ButtonShuffleDeck" to="GameManager" method="ShufflePlayerDeck"]
+[connection signal="value_changed" from="UI/SpinBoxPlayerBP" to="UIManager" method="OnSpinBoxPlayerBPValueChanged"]
+[connection signal="value_changed" from="UI/SpinBoxPlayerVariables" to="UIManager" method="OnSpinBoxPlayerVariablesValueChanged"]
+[connection signal="item_selected" from="UI/OptionObjective" to="UIManager" method="OnOptionObjectiveItemSelected"]
+[connection signal="item_selected" from="UI/OptionPlayerSpecialization" to="UIManager" method="OnOptionPlayerSpecializationItemSelected"]
+[connection signal="ObjectiveChanged" from="UIManager" to="Client" method="_on_objective_changed"]
+[connection signal="PlayerBPChanged" from="UIManager" to="Client" method="_on_player_bp_changed"]
+[connection signal="PlayerSpecializationChanged" from="UIManager" to="Client" method="_on_player_specialization_changed"]
+[connection signal="PlayerVariablesChanged" from="UIManager" to="Client" method="_on_player_variables_changed"]
 [connection signal="PlayerCardMoved" from="GameManager" to="Client" method="_on_player_card_moved"]
 [connection signal="PlayerCardsShuffled" from="GameManager" to="Client" method="_on_player_deck_shuffled"]

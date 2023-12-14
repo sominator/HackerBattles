@@ -77,17 +77,17 @@ public class GameManager : Node
 	//render player deck, removing any existing cards and giving each card an ID and cardType and adding it to PlayerCardsInDeck
 	private void RenderPlayerDeck(string[] playerDeck)
 	{
-        for (int i = PlayerCardsInDeck.Count; i > 0; i--)
-        {
-            PlayerCardsInDeck[i - 1].QueueFree();
-            PlayerCardsInDeck.RemoveAt(i - 1);
-        }
-        for (int i = PlayerCardsInPlay.Count; i > 0; i--)
-        {
-            PlayerCardsInPlay[i - 1].QueueFree();
-            PlayerCardsInPlay.RemoveAt(i - 1);
-        }
-        for (int i = 0; i < playerDeck.Length; i++)
+		for (int i = PlayerCardsInDeck.Count; i > 0; i--)
+		{
+			PlayerCardsInDeck[i - 1].QueueFree();
+			PlayerCardsInDeck.RemoveAt(i - 1);
+		}
+		for (int i = PlayerCardsInPlay.Count; i > 0; i--)
+		{
+			PlayerCardsInPlay[i - 1].QueueFree();
+			PlayerCardsInPlay.RemoveAt(i - 1);
+		}
+		for (int i = 0; i < playerDeck.Length; i++)
 		{
 			Card card = GetScene(playerDeck[i]).Instance<Card>();
 			card.RectPosition = new Vector2(1300, 825);
@@ -102,12 +102,12 @@ public class GameManager : Node
 	//render opponent deck, removing any existing cards and giving each card an ID and cardType
 	private void RenderOpponentDeck(string[] opponentDeck)
 	{
-        for (int i = OpponentCardsInDeck.Count; i > 0; i--)
-        {
-            OpponentCardsInDeck[i - 1].QueueFree();
-            OpponentCardsInDeck.RemoveAt(i - 1);
-        }
-        for (int i = 0; i < opponentDeck.Length; i++)
+		for (int i = OpponentCardsInDeck.Count; i > 0; i--)
+		{
+			OpponentCardsInDeck[i - 1].QueueFree();
+			OpponentCardsInDeck.RemoveAt(i - 1);
+		}
+		for (int i = 0; i < opponentDeck.Length; i++)
 		{
 			Card card = GetScene(opponentDeck[i]).Instance<Card>();
 			card.RectPosition = new Vector2(1300, 25);
@@ -149,13 +149,13 @@ public class GameManager : Node
 	}
 	
 	//request a new shuffled deck from server
-    private void ShufflePlayerDeck()
-    {
+	private void ShufflePlayerDeck()
+	{
 		EmitSignal(nameof(PlayerCardsShuffled));
-    }
+	}
 
-    //handle card being dropped in socket and send a message to render it in the opposing socket
-    public void DroppedCard(int ID, string socketName)
+	//handle card being dropped in socket and send a message to render it in the opposing socket
+	public void DroppedCard(int ID, string socketName)
 	{
 		Panel _socket;
 
