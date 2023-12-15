@@ -33,6 +33,9 @@ signal render_opponent_deck(opponent_Deck)
 #signal to request GameManager to handle moved card
 signal render_opponent_moved_card(id, position)
 
+#signal to request GameManager to handle flipped card
+signal render_opponent_flipped_card(id)
+
 #signal to request GameManager to update opponent BP
 signal update_opponent_bp(value)
 
@@ -58,6 +61,8 @@ func _on_game_message(message):
 		emit_signal("render_opponent_deck", message.data.opponentDeck)
 	elif (message.action == "card_moved"):
 		emit_signal("render_opponent_moved_card", message.data.id, message.data.posX, message.data.posY)
+	elif (message.action == "card_flipped"):
+		emit_signal("render_opponent_flipped_card", message.data.id)
 	elif (message.action == "player_deck_shuffled"):
 		emit_signal("render_player_deck", message.data.playerDeck)
 	elif (message.action == "opponent_deck_shuffled"):
@@ -75,6 +80,11 @@ func _on_game_message(message):
 func _on_player_card_moved(ID, position):
 	var message = {"action": "card_moved", "data": {"id": ID, "posX": position.x, "posY": position.y}}
 	room.send("game-message", message)
+	
+func _on__player_card_flipped(ID):
+	var message = {"action": "card_flipped", "data": {"id": ID}}
+	room.send("game-message", message)
+
 
 #send message to server to request a new shuffled player deck and render it on the opponent side
 func _on_player_deck_shuffled():

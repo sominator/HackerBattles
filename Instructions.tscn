@@ -1,0 +1,43 @@
+[gd_scene format=2]
+
+[node name="Panel" type="Panel"]
+margin_right = 1920.0
+margin_bottom = 1080.0
+
+[node name="Title" type="Label" parent="."]
+margin_left = 840.0
+margin_top = 56.0
+margin_right = 923.0
+margin_bottom = 66.0
+rect_scale = Vector2( 2.5, 2.5 )
+text = "INSTRUCTIONS"
+autowrap = true
+
+[node name="Text" type="Label" parent="."]
+margin_left = 16.0
+margin_top = 112.0
+margin_right = 762.0
+margin_bottom = 445.0
+rect_scale = Vector2( 2.5, 2.5 )
+text = "Entromancy: Hacker Battles is a competitive card game based on creating and deploying programs, which are in turn comprised of functions, represented by cards.
+
+Each round of Entromancy: Hacker Battles is divided into three phases: Initialize {}, Compile {}, and Execute {}.  Each player takes a turn within each  phase before the game moves on to the next phase.
+
+During the Initialize {} phase, each player is dealt 5 functions from the top of the deck, creating a hand.
+
+During the Compile {} phase, each player creates a program by playing functions one at a time from their hand, face up, from left to right in their playing area.
+
+During the Execute {} phase, all BP accrual or depletion is resolved, to a minimum of 0.
+
+Each player has five function sockets, into which they play their functions, from left to right, on their turns.  Each socket has a value, from 1 to 5, beginning with the leftmost socket (1) and ending with the rightmost socket (5).  
+
+Placing a function into a socket makes the function active.  A player can also flip a card (shift + click) to play an inactive function.
+
+If  a player reaches 20 BP, they have overcome the other players’ security device and won the Hacker Battle.  If more than one player reaches  20 BP at the same time, the game continues until one player accrues a total of more BP than the other.
+
+There are 15 unique functions in the full game, and two copies of each function included in each deck, for a total of 60 cards.
+ 
+The full game also includes 5 different Objective cards and 5 unique Hacker Specializations that utilize variables to dramatically affect the game.
+            
+Press Escape to return to the game, or head to www.nightpathpub.com to learn more. You can also email info@entromancy.com with any feedback or bug reports."
+autowrap = true

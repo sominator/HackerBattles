@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=2]
+[gd_scene load_steps=22 format=2]
 
 [ext_resource path="res://scripts/GameManager.cs" type="Script" id=1]
 [ext_resource path="res://scripts/Client.gd" type="Script" id=2]
@@ -19,6 +19,7 @@
 [ext_resource path="res://cards/playable/Probe.tscn" type="PackedScene" id=17]
 [ext_resource path="res://cards/playable/ReInitialize.tscn" type="PackedScene" id=18]
 [ext_resource path="res://scripts/UIManager.cs" type="Script" id=19]
+[ext_resource path="res://Instructions.tscn" type="PackedScene" id=20]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 25, 75 )
@@ -28,13 +29,13 @@ extents = Vector2( 25, 75 )
 [node name="Client" type="Node" parent="."]
 script = ExtResource( 2 )
 
-[node name="UI" type="Node" parent="."]
+[node name="UI" type="Panel" parent="."]
 
 [node name="OpponentZone" type="Panel" parent="UI"]
 margin_right = 1280.0
 margin_bottom = 260.0
 
-[node name="PlayerSockets" type="Node" parent="UI"]
+[node name="PlayerSockets" type="Panel" parent="UI"]
 
 [node name="PlayerSocket1" type="Panel" parent="UI/PlayerSockets"]
 margin_left = 32.0
@@ -101,7 +102,7 @@ collision_mask = 2
 position = Vector2( 88, 127.5 )
 shape = SubResource( 1 )
 
-[node name="OpponentSockets" type="Node" parent="UI"]
+[node name="OpponentSockets" type="Panel" parent="UI"]
 
 [node name="OpponentSocket1" type="Panel" parent="UI/OpponentSockets"]
 margin_left = 1072.0
@@ -283,13 +284,22 @@ align = 1
 items = [ "Ace", null, false, 0, null, "Firestorm", null, false, 1, null, "Interrupt", null, false, 2, null, "Overload", null, false, 3, null, "Reset", null, false, 4, null ]
 selected = 0
 
-[node name="LabelObjective" type="Label" parent="UI"]
+[node name="LabelInfo" type="Label" parent="UI"]
 margin_left = 1681.0
 margin_top = 509.0
 margin_right = 1739.0
 margin_bottom = 518.0
 rect_scale = Vector2( 2, 2 )
 text = "Objective:"
+
+[node name="LabelObjective" type="Label" parent="UI"]
+margin_left = 1624.0
+margin_top = 408.0
+margin_right = 1780.0
+margin_bottom = 441.0
+rect_scale = Vector2( 1.5, 1.5 )
+text = "Press Shift + Click to flip a card, or Escape to display the instructions. "
+autowrap = true
 
 [node name="LabelPlayerSpecialization" type="Label" parent="UI"]
 margin_left = 1657.0
@@ -298,6 +308,49 @@ margin_right = 1741.0
 margin_bottom = 721.0
 rect_scale = Vector2( 2, 2 )
 text = "Specialization:"
+
+[node name="OptionPlayerSpecialization" type="OptionButton" parent="UI"]
+margin_left = 1585.0
+margin_top = 752.0
+margin_right = 1736.0
+margin_bottom = 765.0
+rect_scale = Vector2( 2, 2 )
+text = "Ace"
+align = 1
+items = [ "Ace", null, false, 0, null, "Firestorm", null, false, 1, null, "Interrupt", null, false, 2, null, "Overload", null, false, 3, null, "Reset", null, false, 4, null ]
+selected = 0
+
+[node name="LabelLightMode" type="Label" parent="UI"]
+margin_left = 1600.0
+margin_top = 616.0
+margin_right = 1660.0
+margin_bottom = 625.0
+rect_scale = Vector2( 1.5, 1.5 )
+text = "Light Mode"
+
+[node name="LabelDarkMode" type="Label" parent="UI"]
+margin_left = 1776.0
+margin_top = 616.0
+margin_right = 1836.0
+margin_bottom = 625.0
+rect_scale = Vector2( 1.5, 1.5 )
+text = "Dark Mode"
+
+[node name="LabelTheme" type="Label" parent="UI"]
+margin_left = 1600.0
+margin_top = 648.0
+margin_right = 1781.0
+margin_bottom = 675.0
+rect_scale = Vector2( 1.5, 1.5 )
+text = "Theme adapted from azagaya's Pixel Art Sci Fi Theme (c) 2021"
+autowrap = true
+
+[node name="ButtonMode" type="CheckButton" parent="UI"]
+margin_left = 1715.0
+margin_top = 616.0
+margin_right = 1729.0
+margin_bottom = 625.0
+rect_scale = Vector2( 2, 2 )
 
 [node name="OptionObjective" type="OptionButton" parent="UI"]
 margin_left = 1585.0
@@ -311,19 +364,9 @@ align = 1
 items = [ "Reach 10 bit points (BP)", null, false, 0, null, "Spend 20 variables", null, false, 1, null, "Execute {} five times", null, false, 2, null, "Exchange functions with an opponent four times", null, false, 3, null, "Play or cause 5 inactive functions", null, false, 4, null ]
 selected = 0
 
-[node name="OptionPlayerSpecialization" type="OptionButton" parent="UI"]
-margin_left = 1585.0
-margin_top = 752.0
-margin_right = 1736.0
-margin_bottom = 765.0
-rect_scale = Vector2( 2, 2 )
-text = "Ace"
-align = 1
-items = [ "Ace", null, false, 0, null, "Firestorm", null, false, 1, null, "Interrupt", null, false, 2, null, "Overload", null, false, 3, null, "Reset", null, false, 4, null ]
-selected = 0
-
 [node name="UIManager" type="Node" parent="."]
 script = ExtResource( 19 )
+InstructionsScene = ExtResource( 20 )
 
 [node name="GameManager" type="Node" parent="."]
 script = ExtResource( 1 )
@@ -344,7 +387,10 @@ SpliceScene = ExtResource( 13 )
 TurnKeyScene = ExtResource( 14 )
 CardBackScene = ExtResource( 5 )
 
+[node name="CardContainer" type="Panel" parent="GameManager"]
+
 [connection signal="render_opponent_deck" from="Client" to="GameManager" method="RenderOpponentDeck"]
+[connection signal="render_opponent_flipped_card" from="Client" to="GameManager" method="RenderOpponentFlippedCard"]
 [connection signal="render_opponent_moved_card" from="Client" to="GameManager" method="RenderOpponentMovedCard"]
 [connection signal="render_player_deck" from="Client" to="GameManager" method="RenderPlayerDeck"]
 [connection signal="update_objective" from="Client" to="UIManager" method="UpdateObjective"]
@@ -356,11 +402,13 @@ CardBackScene = ExtResource( 5 )
 [connection signal="button_down" from="UI/ButtonShuffleDeck" to="GameManager" method="ShufflePlayerDeck"]
 [connection signal="value_changed" from="UI/SpinBoxPlayerBP" to="UIManager" method="OnSpinBoxPlayerBPValueChanged"]
 [connection signal="value_changed" from="UI/SpinBoxPlayerVariables" to="UIManager" method="OnSpinBoxPlayerVariablesValueChanged"]
-[connection signal="item_selected" from="UI/OptionObjective" to="UIManager" method="OnOptionObjectiveItemSelected"]
 [connection signal="item_selected" from="UI/OptionPlayerSpecialization" to="UIManager" method="OnOptionPlayerSpecializationItemSelected"]
+[connection signal="toggled" from="UI/ButtonMode" to="UIManager" method="OnModeToggled"]
+[connection signal="item_selected" from="UI/OptionObjective" to="UIManager" method="OnOptionObjectiveItemSelected"]
 [connection signal="ObjectiveChanged" from="UIManager" to="Client" method="_on_objective_changed"]
 [connection signal="PlayerBPChanged" from="UIManager" to="Client" method="_on_player_bp_changed"]
 [connection signal="PlayerSpecializationChanged" from="UIManager" to="Client" method="_on_player_specialization_changed"]
 [connection signal="PlayerVariablesChanged" from="UIManager" to="Client" method="_on_player_variables_changed"]
+[connection signal="PlayerCardFlipped" from="GameManager" to="Client" method="_on__player_card_flipped"]
 [connection signal="PlayerCardMoved" from="GameManager" to="Client" method="_on_player_card_moved"]
 [connection signal="PlayerCardsShuffled" from="GameManager" to="Client" method="_on_player_deck_shuffled"]

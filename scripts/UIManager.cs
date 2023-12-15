@@ -1,8 +1,14 @@
 using Godot;
 using System;
+using System.Diagnostics.PerformanceData;
 
 public class UIManager : Node
 {
+	//store instructions scene
+	[Export]
+	public PackedScene InstructionsScene;
+	Panel _instructionPanel = null;
+
 	//keep track of UI spinboxes and option buttons
 	SpinBox _spinBoxOpponentBP;
 	SpinBox _spinBoxOpponentVariables;
@@ -10,17 +16,50 @@ public class UIManager : Node
 	OptionButton _optionOpponentSpecialization;
 	OptionButton _optionObjective;
 
-	public override void _Ready()
+    //store themes and panels
+    Theme _lightTheme = (Theme)GD.Load("res://theme/sci-fi-theme-light.tres");
+    Theme _darkTheme = (Theme)GD.Load("res://theme/sci-fi-theme-dark.tres");
+	Panel _uiPanel;
+	Panel _playerSocketsPanel;
+	Panel _opponentSocketsPanel;
+	Panel _cardContainerPanel;
+
+    public override void _Ready()
 	{
-		//store UI spinboxes and option buttons
+		//store UI spinboxes, option buttons, and panels
 		_spinBoxOpponentBP = (SpinBox)GetNode("../UI/SpinBoxOpponentBP");
 		_spinBoxOpponentVariables = (SpinBox)GetNode("../UI/SpinBoxOpponentVariables");
 		_optionOpponentSpecialization = (OptionButton)GetNode("../UI/OptionOpponentSpecialization");
 		_optionObjective = (OptionButton)GetNode("../UI/OptionObjective");
+		_uiPanel = (Panel)GetNode("../UI");
+		_playerSocketsPanel = (Panel)GetNode("../UI/PlayerSockets");
+		_opponentSocketsPanel = (Panel)GetNode("../UI/OpponentSockets");
+		_cardContainerPanel = (Panel)GetNode("../GameManager/CardContainer");
 	}
 
-	//handle update opponent BP signal from client object
-	private void UpdateOpponentBP(float value)
+    public override void _Process(float delta)
+    {
+		//handle rendering instruction panel based on escape key
+		if (Input.IsActionJustPressed("escape"))
+		{
+			if (_instructionPanel == null)
+			{
+                _instructionPanel = InstructionsScene.Instance<Panel>();
+                GetNode("../GameManager/CardContainer").AddChild(_instructionPanel);
+            }
+			else
+			{
+				_instructionPanel.QueueFree();
+				_instructionPanel = null;
+			}
+            
+        }
+
+        base._Process(delta);
+    }
+
+    //handle update opponent BP signal from client object
+    private void UpdateOpponentBP(float value)
 	{
 		_spinBoxOpponentBP.Value = value;
 	}
@@ -67,6 +106,27 @@ public class UIManager : Node
 	{
 		EmitSignal(nameof(PlayerSpecializationChanged), index);
 	}
+
+	//handle toggling of light and dark modes
+	private void OnModeToggled(bool button_pressed)
+	{
+        if (button_pressed)
+        {
+            //toggle panels to dark mode
+            _uiPanel.Theme = _darkTheme;
+            _playerSocketsPanel.Theme = _darkTheme;
+            _opponentSocketsPanel.Theme = _darkTheme;
+			_cardContainerPanel.Theme = _darkTheme;
+        }
+        else
+        {
+            //toggle panels to light mode
+            _uiPanel.Theme = _lightTheme;
+            _playerSocketsPanel.Theme = _darkTheme;
+            _opponentSocketsPanel.Theme = _darkTheme;
+			_cardContainerPanel.Theme = _lightTheme;
+        }
+    }
 
 	[Signal]
 	public delegate void PlayerBPChanged(float value);

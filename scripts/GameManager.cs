@@ -55,6 +55,9 @@ public class GameManager : Node
 
 	//keep track of opponent sockets
 	public List<Panel> OpponentSockets = new List<Panel>();
+
+	//keep track of card container panel
+	Panel _cardContainer;
 	
 	public override void _Ready()
 	{
@@ -70,6 +73,9 @@ public class GameManager : Node
 		{
 			OpponentSockets.Add((Panel)_opponentSockets.GetChild(i));
 		}
+
+		//store card container panel
+		_cardContainer = (Panel)GetNode("../GameManager/CardContainer");
 
 		base._Ready();
 	}
@@ -93,9 +99,9 @@ public class GameManager : Node
 			card.RectPosition = new Vector2(1300, 825);
 			card.ID = i;
 			card.CardType = "PlayerCard";
-			card.IsDraggable = true;
+			card.IsDraggable = false;
 			PlayerCardsInDeck.Add(card);
-			AddChild(card);
+			_cardContainer.AddChild(card);
 		}
 	}
 
@@ -110,12 +116,12 @@ public class GameManager : Node
 		for (int i = 0; i < opponentDeck.Length; i++)
 		{
 			Card card = GetScene(opponentDeck[i]).Instance<Card>();
-			card.RectPosition = new Vector2(1300, 25);
+			card.RectPosition = new Vector2(1300, 0);
 			card.ID = i;
 			card.CardType = "OpponentCard";
 			card.IsDraggable = false;
 			OpponentCardsInDeck.Add(card);
-			AddChild(card);
+			_cardContainer.AddChild(card);
 		}
 	}
 
@@ -128,6 +134,8 @@ public class GameManager : Node
 			Card card = PlayerCardsInDeck[i];
 			card.RectPosition = new Vector2((i * 215) + 125, 825);
 			card.StartPosition = card.RectPosition;
+			card.IsDraggable = true;
+			card.FlipForMe();
 			PlayerCardsInPlay.Add(card);
 			EmitSignal(nameof(PlayerCardMoved), card.ID, new Vector2((i * 215) + 125, 0));
 		}
@@ -144,8 +152,13 @@ public class GameManager : Node
 			card.RectPosition = new Vector2(1650, 825);
 			card.StartPosition = card.RectPosition;
 			EmitSignal(nameof(PlayerCardMoved), card.ID, new Vector2(1650, 25));
+			//treat card as being dropped and flip it if text isn't visible
+			card.HandleDrop();
+			if (!card.CardName.Visible)
+			{
+				card.FlipForAll();
+			}
 		}
-		GD.Print(PlayerCardsInPlay.Count);
 	}
 	
 	//request a new shuffled deck from server
@@ -198,11 +211,24 @@ public class GameManager : Node
 		EmitSignal(nameof(PlayerCardMoved), ID, _socket.RectPosition);
 	}
 
+	//handle card being flipped and send a signal to the client object to render it on the opponent's side
+	public void FlippedCard(int ID)
+	{
+        EmitSignal(nameof(PlayerCardFlipped), ID);
+    }
+
 	//handle drop signal from client object
 	private void RenderOpponentMovedCard(int ID, int posX, int posY)
 	{
 		Card card = OpponentCardsInDeck.Find(x => x.ID == ID);
 		card.RectPosition = new Vector2(posX, posY);
+	}
+
+	//handle flip signal from client object
+	private void RenderOpponentFlippedCard(int ID)
+	{
+		Card card = OpponentCardsInDeck.Find(x => x.ID == ID);
+		card.FlipForMe();
 	}
 
 	//determine PackedScene to instance based on string name
@@ -248,6 +274,9 @@ public class GameManager : Node
 	//signal to let client object know card has been dropped
 	[Signal]
 	public delegate void PlayerCardMoved(int ID, Vector2 position);
+
+	[Signal]
+	public delegate void PlayerCardFlipped(int ID);
 
 	//signal to let client object know to request a new shuffled deck
 	[Signal]
