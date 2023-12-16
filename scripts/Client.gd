@@ -2,6 +2,7 @@ extends Node
 
 const colyseus = preload("res://addons/godot_colyseus/lib/colyseus.gd")
 var room: colyseus.Room
+var roomId = null
 
 #set up basic schema
 class GameState extends colyseus.Schema:
@@ -14,7 +15,11 @@ class GameState extends colyseus.Schema:
 func _ready():
 	#set up client
 	var client = colyseus.Client.new("ws://localhost:2567")
-	var promise = client.join_or_create(GameState, "game")
+	var promise
+	if (roomId == null):
+		promise = client.join_or_create(GameState, "game")
+	else:
+		promise = client.join_by_id(GameState, roomId)
 	yield(promise, "completed")
 	if promise.get_state() == promise.State.Failed:
 		print("Failed")
@@ -36,16 +41,19 @@ signal render_opponent_moved_card(id, position)
 #signal to request GameManager to handle flipped card
 signal render_opponent_flipped_card(id)
 
-#signal to request GameManager to update opponent BP
+#signal to request UIManager to update room id
+signal update_roomId(roomId)
+
+#signal to request UIManager to update opponent BP
 signal update_opponent_bp(value)
 
-#signal to request GameManager to update opponent variables
+#signal to request UIManager to update opponent variables
 signal update_opponent_variables(value)
 
-#signal to request GameManager to update objective
+#signal to request UIManager to update objective
 signal update_objective(index)
 
-#signal to request GameManager to update opponent specialization
+#signal to request UIManager to update opponent specialization
 signal update_opponent_specialization(index)
 
 #log server message to console
@@ -67,6 +75,8 @@ func _on_game_message(message):
 		emit_signal("render_player_deck", message.data.playerDeck)
 	elif (message.action == "opponent_deck_shuffled"):
 		emit_signal("render_opponent_deck", message.data.opponentDeck)
+	elif (message.action == "update_roomId"):
+		emit_signal("update_roomId", message.data.roomId)	
 	elif (message.action == "bp_changed"):
 		emit_signal("update_opponent_bp", message.data.value)
 	elif (message.action == "variables_changed"):
@@ -84,7 +94,6 @@ func _on_player_card_moved(ID, position):
 func _on__player_card_flipped(ID):
 	var message = {"action": "card_flipped", "data": {"id": ID}}
 	room.send("game-message", message)
-
 
 #send message to server to request a new shuffled player deck and render it on the opponent side
 func _on_player_deck_shuffled():

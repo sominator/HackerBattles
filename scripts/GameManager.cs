@@ -151,7 +151,7 @@ public class GameManager : Node
 			Card card = PlayerCardsInPlay[i];
 			card.RectPosition = new Vector2(1650, 825);
 			card.StartPosition = card.RectPosition;
-			EmitSignal(nameof(PlayerCardMoved), card.ID, new Vector2(1650, 25));
+			EmitSignal(nameof(PlayerCardMoved), card.ID, new Vector2(1650, 0));
 			//treat card as being dropped and flip it if text isn't visible
 			card.HandleDrop();
 			if (!card.CardName.Visible)

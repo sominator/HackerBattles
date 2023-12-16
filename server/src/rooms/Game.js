@@ -70,9 +70,17 @@ export class Game extends Room {
 
         //increment number of players
         this.numberOfPlayers++;
-
+        
         console.log(client.sessionId, "joined!");
         this.broadcast("server-message", `${client.sessionId} joined.`);
+
+        //send the client the room ID
+        client.send("game-message", {
+            action: "update_roomId",
+            data: {
+                roomId: this.roomId
+            }
+        });
 
         //if two players are present, message clients with deck arrays
         if (this.numberOfPlayers === 2) {

@@ -293,12 +293,30 @@ rect_scale = Vector2( 2, 2 )
 text = "Objective:"
 
 [node name="LabelObjective" type="Label" parent="UI"]
-margin_left = 1624.0
-margin_top = 408.0
-margin_right = 1780.0
-margin_bottom = 441.0
+margin_left = 1600.0
+margin_top = 400.0
+margin_right = 1781.0
+margin_bottom = 433.0
 rect_scale = Vector2( 1.5, 1.5 )
 text = "Press Shift + Click to flip a card, or Escape to display the instructions. "
+autowrap = true
+
+[node name="LabelRoom" type="Label" parent="UI"]
+margin_left = 1656.0
+margin_top = 464.0
+margin_right = 1711.0
+margin_bottom = 480.0
+rect_scale = Vector2( 1.5, 1.5 )
+text = "Room ID:"
+autowrap = true
+
+[node name="LabelRoomId" type="Label" parent="UI"]
+margin_left = 1739.0
+margin_top = 464.0
+margin_right = 1838.0
+margin_bottom = 475.0
+rect_scale = Vector2( 1.5, 1.5 )
+text = "NULL"
 autowrap = true
 
 [node name="LabelPlayerSpecialization" type="Label" parent="UI"]
@@ -397,6 +415,7 @@ CardBackScene = ExtResource( 5 )
 [connection signal="update_opponent_bp" from="Client" to="UIManager" method="UpdateOpponentBP"]
 [connection signal="update_opponent_specialization" from="Client" to="UIManager" method="UpdateOpponentSpecialization"]
 [connection signal="update_opponent_variables" from="Client" to="UIManager" method="UpdateOpponentVariables"]
+[connection signal="update_roomId" from="Client" to="UIManager" method="UpdateRoomId"]
 [connection signal="button_down" from="UI/ButtonDealCards" to="GameManager" method="DealPlayerCards"]
 [connection signal="button_down" from="UI/ButtonCleanUpCards" to="GameManager" method="CleanUpPlayerCards"]
 [connection signal="button_down" from="UI/ButtonShuffleDeck" to="GameManager" method="ShufflePlayerDeck"]
