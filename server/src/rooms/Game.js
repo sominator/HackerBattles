@@ -84,6 +84,7 @@ export class Game extends Room {
 
         //if two players are present, message clients with deck arrays
         if (this.numberOfPlayers === 2) {
+            this.broadcast("game-message", { action: "clients_connected" });
             this.clients[0].send("game-message", {
                 action: "shuffle_decks",
                 data: {
@@ -106,6 +107,7 @@ export class Game extends Room {
         this.numberOfPlayers--;
         console.log(client.sessionId, "left!");
         this.broadcast("server-message", `${client.sessionId} left.`);
+        this.broadcast("game-message", { action: "client_disconnected" });
     }
 
     //determine what should happen when a room is closed

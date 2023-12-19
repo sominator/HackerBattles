@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=2]
+[gd_scene load_steps=24 format=2]
 
 [ext_resource path="res://scripts/GameManager.cs" type="Script" id=1]
 [ext_resource path="res://scripts/Client.gd" type="Script" id=2]
@@ -20,6 +20,8 @@
 [ext_resource path="res://cards/playable/ReInitialize.tscn" type="PackedScene" id=18]
 [ext_resource path="res://scripts/UIManager.cs" type="Script" id=19]
 [ext_resource path="res://Instructions.tscn" type="PackedScene" id=20]
+[ext_resource path="res://PopupWaiting.tscn" type="PackedScene" id=21]
+[ext_resource path="res://PopupDisconnect.tscn" type="PackedScene" id=22]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 25, 75 )
@@ -310,14 +312,14 @@ rect_scale = Vector2( 1.5, 1.5 )
 text = "Room ID:"
 autowrap = true
 
-[node name="LabelRoomId" type="Label" parent="UI"]
-margin_left = 1739.0
-margin_top = 464.0
-margin_right = 1838.0
+[node name="LineEditRoomId" type="LineEdit" parent="UI"]
+margin_left = 1736.0
+margin_top = 458.0
+margin_right = 1837.0
 margin_bottom = 475.0
 rect_scale = Vector2( 1.5, 1.5 )
 text = "NULL"
-autowrap = true
+editable = false
 
 [node name="LabelPlayerSpecialization" type="Label" parent="UI"]
 margin_left = 1657.0
@@ -382,9 +384,12 @@ align = 1
 items = [ "Reach 10 bit points (BP)", null, false, 0, null, "Spend 20 variables", null, false, 1, null, "Execute {} five times", null, false, 2, null, "Exchange functions with an opponent four times", null, false, 3, null, "Play or cause 5 inactive functions", null, false, 4, null ]
 selected = 0
 
+[node name="PopupWaiting" parent="." instance=ExtResource( 21 )]
+
 [node name="UIManager" type="Node" parent="."]
 script = ExtResource( 19 )
 InstructionsScene = ExtResource( 20 )
+DisconnectScene = ExtResource( 22 )
 
 [node name="GameManager" type="Node" parent="."]
 script = ExtResource( 1 )
@@ -407,6 +412,8 @@ CardBackScene = ExtResource( 5 )
 
 [node name="CardContainer" type="Panel" parent="GameManager"]
 
+[connection signal="client_disconnected" from="Client" to="UIManager" method="OnClientDisconnected"]
+[connection signal="clients_connected" from="Client" to="UIManager" method="OnClientsConnected"]
 [connection signal="render_opponent_deck" from="Client" to="GameManager" method="RenderOpponentDeck"]
 [connection signal="render_opponent_flipped_card" from="Client" to="GameManager" method="RenderOpponentFlippedCard"]
 [connection signal="render_opponent_moved_card" from="Client" to="GameManager" method="RenderOpponentMovedCard"]

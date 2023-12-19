@@ -3,13 +3,17 @@ using System;
 
 public class Login : Panel
 {
+	//keep track of room id line edit
 	LineEdit _roomId;
+
 	public override void _Ready()
 	{
-		_roomId = (LineEdit)GetNode("LineEdit");
+		//store room id line edit
+		_roomId = (LineEdit)GetNode("LineEditRoomId");
 
 	}
 
+	//handle room creation, switch scenes, and destroy login screen
 	private void OnLoginWithoutId()
 	{
 		Node _mainScene = ResourceLoader.Load<PackedScene>("res://Main.tscn").Instance();
@@ -17,7 +21,7 @@ public class Login : Panel
 		QueueFree();
 	}
 
-
+	//handle login with existing room id, switch scenes, and destroy login screen
 	private void OnLoginWithId()
 	{
 		Node _mainScene = ResourceLoader.Load<PackedScene>("res://Main.tscn").Instance();

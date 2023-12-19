@@ -4,10 +4,15 @@ using System.Diagnostics.PerformanceData;
 
 public class UIManager : Node
 {
-	//store instructions scene
+	//store instructions and player disconnected scenes
 	[Export]
 	public PackedScene InstructionsScene;
+
+	[Export]
+	public PackedScene DisconnectScene;
+	
 	Panel _instructionPanel = null;
+	Panel _disconnectedPanel = null;
 
 	//keep track of UI spinboxes and option buttons
 	SpinBox _spinBoxOpponentBP;
@@ -19,29 +24,31 @@ public class UIManager : Node
 	//store themes and panels
 	Theme _lightTheme = (Theme)GD.Load("res://theme/sci-fi-theme-light.tres");
 	Theme _darkTheme = (Theme)GD.Load("res://theme/sci-fi-theme-dark.tres");
+	Panel _waitingPanel;
 	Panel _uiPanel;
 	Panel _playerSocketsPanel;
 	Panel _opponentSocketsPanel;
 	Panel _cardContainerPanel;
 
-    //keep track of room id label
-    Label _roomIdLabel;
+	//keep track of room id line edit
+	LineEdit _roomIdLineEdit;
 
-    public override void _Ready()
+	public override void _Ready()
 	{
 		//store UI spinboxes, option buttons, and panels
 		_spinBoxOpponentBP = (SpinBox)GetNode("../UI/SpinBoxOpponentBP");
 		_spinBoxOpponentVariables = (SpinBox)GetNode("../UI/SpinBoxOpponentVariables");
 		_optionOpponentSpecialization = (OptionButton)GetNode("../UI/OptionOpponentSpecialization");
 		_optionObjective = (OptionButton)GetNode("../UI/OptionObjective");
+		_waitingPanel = (Panel)GetNode("../PopupWaiting");
 		_uiPanel = (Panel)GetNode("../UI");
 		_playerSocketsPanel = (Panel)GetNode("../UI/PlayerSockets");
 		_opponentSocketsPanel = (Panel)GetNode("../UI/OpponentSockets");
 		_cardContainerPanel = (Panel)GetNode("../GameManager/CardContainer");
 
-        //store room id label
-        _roomIdLabel = (Label)GetNode("../UI/LabelRoomId");
-    }
+		//store room id line edit
+		_roomIdLineEdit = (LineEdit)GetNode("../UI/LineEditRoomId");
+	}
 
 	public override void _Process(float delta)
 	{
@@ -65,13 +72,32 @@ public class UIManager : Node
 	}
 
 	//handle update room id signal from client object
-    private void UpdateRoomId(string roomId)
-    {
-        _roomIdLabel.Text = roomId;
-    }
+	private void UpdateRoomId(string roomId)
+	{
+		//update game room id
+		_roomIdLineEdit.Text = roomId;
 
-    //handle update opponent BP signal from client object
-    private void UpdateOpponentBP(float value)
+		//update room id for waiting panel
+		LineEdit _waitingPanelRoomId = (LineEdit)_waitingPanel.GetNode("LineEditRoomId");
+		_waitingPanelRoomId.Text = roomId;
+	}
+
+	//handle clients connected signal from client object
+	private void OnClientsConnected()
+	{
+		//destroy waiting panel
+		_waitingPanel.QueueFree();
+	}
+
+	//handle client disconnected signal from client object
+	private void OnClientDisconnected()
+	{
+		_disconnectedPanel = DisconnectScene.Instance<Panel>();
+		GetNode("../GameManager/CardContainer").AddChild(_disconnectedPanel);
+	}
+
+	//handle update opponent BP signal from client object
+	private void UpdateOpponentBP(float value)
 	{
 		_spinBoxOpponentBP.Value = value;
 	}

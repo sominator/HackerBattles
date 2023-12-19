@@ -1,0 +1,17 @@
+[gd_scene format=2]
+
+[node name="PopupDisconnect" type="Panel"]
+margin_left = 560.0
+margin_top = 200.0
+margin_right = 1360.0
+margin_bottom = 700.0
+
+[node name="LabelDisconnect" type="Label" parent="."]
+margin_left = 192.0
+margin_top = 120.0
+margin_right = 339.0
+margin_bottom = 153.0
+rect_scale = Vector2( 3, 3 )
+text = "Opponent Disconnected...
+
+Please start a new game!"

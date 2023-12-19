@@ -1,0 +1,32 @@
+[gd_scene format=2]
+
+[node name="PopupWaiting" type="Panel"]
+margin_left = 560.0
+margin_top = 200.0
+margin_right = 1360.0
+margin_bottom = 700.0
+
+[node name="LabelWaiting" type="Label" parent="."]
+margin_left = 168.0
+margin_top = 88.0
+margin_right = 331.0
+margin_bottom = 97.0
+rect_scale = Vector2( 3, 3 )
+text = "Waiting for second player..."
+
+[node name="LabelRoomId" type="Label" parent="."]
+margin_left = 192.0
+margin_top = 170.0
+margin_right = 245.0
+margin_bottom = 179.0
+rect_scale = Vector2( 3, 3 )
+text = "Room ID:"
+
+[node name="LineEditRoomId" type="LineEdit" parent="."]
+margin_left = 384.0
+margin_top = 160.0
+margin_right = 500.0
+margin_bottom = 184.0
+rect_scale = Vector2( 2, 2 )
+editable = false
+placeholder_text = "Room ID"

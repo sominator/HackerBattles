@@ -29,6 +29,12 @@ func _ready():
 	room.on_message("game-message").on(funcref(self, "_on_game_message"))
 	self.room = room
 
+#signal to let UIManager know both clients have connected
+signal clients_connected()
+
+#signal to let UIManger know client has disconnected
+signal client_disconnected()
+
 #signal to request GameManager to render player deck
 signal render_player_deck(player_deck)
 
@@ -64,7 +70,11 @@ func _on_server_message(message):
 func _on_game_message(message):
 	print("Game Message received:")
 	print(message.action)
-	if (message.action == "shuffle_decks"):
+	if (message.action == "clients_connected"):
+		emit_signal("clients_connected")
+	elif (message.action == "client_disconnected"):
+		emit_signal("client_disconnected")
+	elif (message.action == "shuffle_decks"):
 		emit_signal("render_player_deck", message.data.playerDeck)
 		emit_signal("render_opponent_deck", message.data.opponentDeck)
 	elif (message.action == "card_moved"):
