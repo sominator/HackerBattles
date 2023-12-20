@@ -17,7 +17,7 @@ func _ready():
 	var client = colyseus.Client.new("wss://hacker-battles-f19d332ad0f0.herokuapp.com/")
 	var promise
 	if (roomId == null):
-		promise = client.join_or_create(GameState, "game")
+		promise = client.create(GameState, "game")
 	else:
 		promise = client.join_by_id(GameState, roomId)
 	yield(promise, "completed")
