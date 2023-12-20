@@ -14,7 +14,7 @@ class GameState extends colyseus.Schema:
 
 func _ready():
 	#set up client
-	var client = colyseus.Client.new("https://hacker-battles-f19d332ad0f0.herokuapp.com/")
+	var client = colyseus.Client.new("wss://hacker-battles-f19d332ad0f0.herokuapp.com/")
 	var promise
 	if (roomId == null):
 		promise = client.join_or_create(GameState, "game")
