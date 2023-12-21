@@ -8,6 +8,8 @@ The Entromancy: Hacker Battles digital demo is made with Godot: https://godoteng
 
 And Colyseus: https://colyseus.io
 
+And the Colyseus SDK for Godot: https://github.com/gsioteam/godot-colyseus
+
 And Multirun! https://github.com/perfoon/Multirun
 
 Theme adapted from azagaya's Sci-Fi Pixel Art theme on Itch.io (c)2021: https://azagaya.itch.io/sci-fi-theme
